@@ -1,0 +1,37 @@
+<view class="container">
+  <view class="page-body">
+    <view class="page-section">
+      <view class="weui-cells__title">{{"团购名: "+ group_order.title}}</view>
+    </view>
+    <view class="page-section">
+      <view class="weui-cells__title">订单列表</view>
+    </view>  
+    <block wx:for="{{ group_order.orders }}" wx:for-item="order" wx:for-index="orderIndex" wx:key="id">
+      <view class="page-section">
+        <view class="weui-cells__title">{{order.name}}</view> 
+      </view>
+      <block wx:for="{{ order.purchases }}" wx:for-item="purchase" wx:for-index="purchaseIndex" wx:key="id">                     
+        <view class="input-list">          
+          <view class="input-list-flex-left">
+            <view class ="input-lable">货品</view>
+            <view class="input-box-picker">
+              <picker  bindchange="onInput" data-type="purchase-name" data-orderIndex="{{orderIndex}}" data-purchaseIndex="{{purchaseIndex}}" value="{{group_order.items_hash[purchase.id].index}}" range="{{group_order.items_names}}">
+                <view >{{group_order.items_hash[purchase.id].name}}</view>
+              </picker>
+            </view>
+          </view>        
+          <view class="input-list-flex-left">
+            <view class ="input-lable">数量:</view>
+            <input class="input-box" maxlength="10" type="digit" placeholder="数量" bindinput="onInput" data-orderIndex="{{orderIndex}}" data-purchaseIndex="{{purchaseIndex}}"  data-type="purchase-amount" value="{{purchase.amount}}"/>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <view class="btn-area">
+      <button type="primary" bindtap='saveAndBack'>Save and Back</button>
+      <button bindtap='cancelAndBack'>Cacel and Back</button>
+    </view>
+  </view>
+
+</view>

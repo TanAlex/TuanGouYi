@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="page-body">
+    <view class="page-section">
+      <view class="weui-cells__title">{{"团购名: "+ group_order.title}}</view>
+    </view>
+    <view class="page-section">
+      <view class="weui-cells__title">订单列表</view>
+    </view>  
+    <view class="page-section">
+      <view class="weui-cells__title">{{order.name}}</view> 
+    </view>
+                     
+      <view class="input-list">          
+        
+        <checkbox-group bindchange="onInput" data-type="purchase-name"  data-purchaseIndex="{{purchaseIndex}}">
+          <block wx:for="{{items}}" wx:key="{{id}}">
+            <view class="input-list-flex-left">
+              <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
+              <view class="input-lable">{{item.name}}</view>
+            </view>
+            <view class="input-list-flex-left">
+              <view class ="input-lable">数量:</view>
+              <input class="input-box" maxlength="8" type="digit" placeholder="数量" bindinput="onInput"  data-itemIndex="{{index}}"  data-type="purchase-amount" value="{{item.amount}}"/>
+
+            </view>   
+          </block>
+        </checkbox-group>
+          
+             
+
+      </view>
+
+
+    <view class="btn-area">
+      <button type="primary" bindtap='saveAndBack'>Save and Back</button>
+      <button bindtap='cancelAndBack'>Cacel and Back</button>
+    </view>
+  </view>
+
+</view>

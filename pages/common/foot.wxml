@@ -1,0 +1,6 @@
+<template name="foot">
+  <view class="about">
+    <view class="about-des">建议&合作</view>
+    <view class="about-des">tantingli@yahoo.com</view>
+  </view>
+</template>

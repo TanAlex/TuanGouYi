@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/hero_detail/hero_detail"
+
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "团购易",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#A4A4A4",
+    "selectedColor": "#D4A93D",
+    "backgroundColor": "#fff",
+    "position": "top",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "当前团购"
+      },
+      {
+        "pagePath": "pages/equip/equip",
+        "text": "发起新购"
+      },
+      {
+        "pagePath": "pages/ming/ming",
+        "text": "我参与的"
+      }
+    ]
+  }
+}
+
+

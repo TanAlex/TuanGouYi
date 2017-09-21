@@ -1,0 +1,71 @@
+<view class="header">
+  <view class="cover">
+    <image src="{{ group_order.cover_img }}" mode="widthFix"></image>
+  </view>
+  <view class="filter"></view>
+  <view class="hero-title">
+    
+    <view class="name">{{ group_order.title }}</view>
+  </view>
+</view>
+
+<view class="container">
+  <view class="hero-nav">
+    <view class="nav-item {{ nav_index == 0 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="0">团购货物</view>
+    <view class="nav-item {{ nav_index == 1 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="1">参与者</view>
+  </view>
+
+  <view class="tab-content">
+    <view class="tab-content-item" hidden="{{ nav_index != 0 }}">
+      <view class="section ">
+        <view class="section-title">可选货品</view>
+        <view class="button-right">EDIT
+          <navigator url="../item_edit/input?id={{ group_order.id }}"></navigator>
+        </view>
+        
+        <view class="skill-content">
+          <view class="skill-content-item">
+            <view class="skill-content-header">            
+              <view wx:for="{{ group_order.items }}" wx:key="id">
+                <view class="item-name">{{ (index+1) + ": "+ item.name }}</view>
+                <!-- <view class="item-tag">推荐</view> -->
+                <view class="item-value">{{"价格：$"+ item.price}}</view>
+              </view>
+
+            </view>
+          </view>
+        </view> 
+      </view>
+    </view>
+    <view class="tab-content-item" hidden="{{ nav_index != 1 }}">
+    <button class="small-button" bindtap='newOrder' type="primary">我也参购</button>
+      <view class="section ">
+        
+        <view class="section-title">{{"全单总价: "+ group_order.total}}</view>
+        
+        <view class="section-title-2">参与者</view>
+        
+
+        <view class="skill-content">
+          <view class="skill-content-item">
+            <view class="skill-content-header">            
+              <view wx:for="{{ group_order.orders }}"  wx:key="id">
+                <view class="item-name">{{ item.name }}</view>
+        <view class="button-right">EDIT
+          <navigator url="../purchase_edit/input?id={{ group_order.id }}&order_id={{item.id}}"></navigator>
+        </view>                
+                <view wx:for="{{ item.purchases }}" wx:for-item="purchase" wx:for-index="i" wx:key="id" >
+                  <view class="item-value">{{ (i+1) + ": "+ purchase.name }} </view>
+                  <view class="item-value-2">{{ "单价：$"+purchase.price + "  数量:"+ purchase.amount + "  总价:" + purchase.sub_total }}</view>
+                </view>
+                <!-- <view class="item-tag">推荐</view> -->
+                <view class="item-name-2">{{"总价：$"+ item.total }}</view>
+              </view>
+
+            </view>
+          </view>
+        </view> 
+      </view>
+    </view>
+  </view>
+</view>

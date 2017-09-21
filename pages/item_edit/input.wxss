@@ -1,0 +1,87 @@
+@import "../common/lib/weui.wxss";
+
+.page-section{
+  margin-bottom: 20rpx;
+}
+
+.weui-cells-m1{
+  margin-top: 3px;
+  
+}
+
+.btn-area{
+  margin:50rpx auto;
+  width: 75%;
+
+}
+
+button {
+  margin: 8px auto;
+}
+
+.input-list {
+  padding: 8rpx 30rpx;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.input-list-flex-left {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   -webkit-justify-content: flex-start;
+   justify-content: flex-start;
+   align-items: center;
+}
+
+.input-list-flex-right {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   -webkit-justify-content: flex-end;
+   justify-content: flex-end;
+   align-items: center;
+}
+.input-lable {
+  font-size: 17px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right:5px;
+}
+.input-box {
+  height: 0.8em;
+  font-size:17px;
+  padding: 1px 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  background-color: #F9F9F9;
+}
+.input-list:before {
+  content: " ";
+  position: absolute;
+  left: 0rpx;
+  right: 0rpx;
+  top: 0;
+  
+  height: 1px;
+  border-top: 1rpx solid #D8D8D8;
+  color: #D8D8D8;
+}
+.input-list:last-child:after {
+  content: " ";
+  position: absolute;
+  left: 0rpx;
+  bottom: 0;
+  right: 0rpx;
+  height: 1px;
+  border-bottom: 1rpx solid #D8D8D8;
+  color: #D8D8D8;
+}
+
+.small-button{
+  font-size: 12px;
+  margin-left: 40rpx;
+}
