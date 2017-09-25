@@ -18,18 +18,26 @@
   <view class="tab-content">
     <view class="tab-content-item" hidden="{{ nav_index != 0 }}">
       <view class="section ">
-        <view class="section-title">可选货品</view>
-        <view class="button-right">EDIT
-          <navigator url="../item_edit/input?id={{ group_order.id }}"></navigator>
-        </view>
-        
+        <view class="section-header">简单介绍</view>
+        <view class="section-text">{{ group_order.description }}</view>
+
+        <view class="section-header">可选货品</view>
+
+        <block wx:if="{{group_order.can_edit}}">
+
+          <view class="button-right" >EDIT
+            <navigator url="../item_edit/input?id={{ group_order.id }}"></navigator>
+          </view>
+        </block>
+        <view class="section-text-highlight">{{"全单总价: $"+ group_order.total}}</view>
         <view class="skill-content">
           <view class="skill-content-item">
-            <view class="skill-content-header">            
+            <view class="skill-content-header"> 
+                       
               <view wx:for="{{ group_order.items }}" wx:key="id">
                 <view class="item-name">{{ (index+1) + ": "+ item.name }}</view>
                 <!-- <view class="item-tag">推荐</view> -->
-                <view class="item-value">{{"价格：$"+ item.price}}</view>
+                <view class="item-value">{{"价格：$"+ item.price + "  总购数量: " + item.count +"  总价: $"+ item.total}}</view>
               </view>
 
             </view>
@@ -38,28 +46,37 @@
       </view>
     </view>
     <view class="tab-content-item" hidden="{{ nav_index != 1 }}">
-    <button class="small-button" bindtap='newOrder' type="primary">我也参购</button>
+     
       <view class="section ">
         
-        <view class="section-title">{{"全单总价: "+ group_order.total}}</view>
-        
-        <view class="section-title-2">参与者</view>
-        
+        <view class="section-header">{{"全单总价: $"+ group_order.total}}</view>
+        <view class="section-text-highlight">{{ "待付 $"+group_order.to_pay_total }}</view>
+        <view class="section-header">便捷工具</view>
 
+        <view class="section-text">内容拷贝到剪切板用来去接龙</view>
+        <view class="button-right" bindtap='copyClipboard' >拷贝</view>
+
+        <view class="section-header">参与者</view>
         <view class="skill-content">
           <view class="skill-content-item">
             <view class="skill-content-header">            
               <view wx:for="{{ group_order.orders }}"  wx:key="id">
-                <view class="item-name">{{ item.name }}</view>
-        <view class="button-right">EDIT
+                <view class="item-row item-row-top-line">
+                  <view class="item-avatar">
+                    <image class="item-img" src="{{item.user_info_display.avatarUrl}}"></image>
+                  </view>
+                  <view class="item-name">{{ item.user_info_display.nickName }}</view>
+                  <view class="{{item.price_display_class}}">{{"总价：$"+ item.total }}</view>
+                </view>
+        <view class="button-right" wx:if="{{item.can_edit}}">EDIT
           <navigator url="../purchase_edit/input?id={{ group_order.id }}&order_id={{item.id}}"></navigator>
         </view>                
                 <view wx:for="{{ item.purchases }}" wx:for-item="purchase" wx:for-index="i" wx:key="id" >
                   <view class="item-value">{{ (i+1) + ": "+ purchase.name }} </view>
-                  <view class="item-value-2">{{ "单价：$"+purchase.price + "  数量:"+ purchase.amount + "  总价:" + purchase.sub_total }}</view>
+                  <view class="item-value-2">{{ "单价：$"+purchase.price + "  数量:"+ purchase.amount + "  总价: $" + purchase.sub_total }}</view>
                 </view>
                 <!-- <view class="item-tag">推荐</view> -->
-                <view class="item-name-2">{{"总价：$"+ item.total }}</view>
+
               </view>
 
             </view>
@@ -67,5 +84,9 @@
         </view> 
       </view>
     </view>
+  </view>
+  
+  <view class="footer" wx:if="{{group_order.notOrderedYet}}">
+   <button class="small-button" bindtap='newOrder' type="primary">我也参购</button>
   </view>
 </view>

@@ -1,15 +1,25 @@
 <view class="container">
   <view class="page-body">
+
     <view class="page-section">
-      <view class="weui-cells__title">{{"团购名: "+ group_order.title}}</view>
+      
+      <view class="item-row item-row-top-line">
+        <span class="item-row-span">
+          <view class="item-avatar">
+            <image class="item-img" src="{{order.user_info.avatarUrl}}"></image>
+          </view>
+
+          <view class="weui-cells__title">{{order.user_info.nickName}}</view>
+        </span>
+        <span class="item-row-span" wx:if="{{can_edit_paid}}">
+          <view class="weui-cells__title">已付款</view>
+          <switch checked="{{order.paid}}" bindchange="switchPaidChange"/>
+        </span>
+      </view>
     </view>
     <view class="page-section">
-      <view class="weui-cells__title">订单列表</view>
-    </view>  
-    <view class="page-section">
-      <view class="weui-cells__title">{{order.name}}</view> 
-    </view>
-                     
+      <view class="section-header">订单列表</view>
+    </view>                       
       <view class="input-list">          
         
         <checkbox-group bindchange="onInput" data-type="purchase-name"  data-purchaseIndex="{{purchaseIndex}}">

@@ -9,7 +9,13 @@
           <view class ="input-lable">名称</view>
           <input class="input-box" maxlength="15" placeholder="名称" bindinput="onInput" data-type="order" data-id="{{group_order.id}}" value="{{group_order.title}}"/>
         </view>
-      </view>      
+      </view>
+      <view class="input-list">
+        <view class="input-list-flex-left">
+          <view class ="input-lable">描述</view>
+          <input class="input-box" maxlength="30" placeholder="简单介绍" bindinput="onInput" data-type="description" data-id="{{group_order.id}}" value="{{group_order.description}}"/>
+        </view>
+      </view>       
     </view>
     <view class="page-section">
       <view class="weui-cells__title">货品列表</view>
@@ -19,12 +25,12 @@
           <view class="input-list">
             <view class="input-list-flex-left">
               <view class ="input-lable">品名</view>
-              <input class="input-box" maxlength="15" auto-focus placeholder="品名" bindinput="onInput" data-id="{{item.id}}" data-type="item-name" value="{{item.name}}"/>
+              <input class="input-box" maxlength="15"  placeholder="品名" bindinput="onInput" data-id="{{item.id}}" data-type="item-name" value="{{item.name}}"/>
               <button class="small-button" bindtap='removeItem' data-index="{{index}}" type="warn">删除</button>
             </view>
             <view class="input-list-flex-left">
               <view class ="input-lable">价格</view>
-              <input class="input-box" maxlength="10" auto-focus type="digit" placeholder="价格" bindinput="onInput" data-id="{{item.id}}" data-type="item-price" value="{{item.price}}"/>
+              <input class="input-box" maxlength="10"  type="digit" placeholder="价格" bindinput="onInput" data-id="{{item.id}}" data-type="item-price" value="{{item.price}}"/>
             </view>
           </view>
       </block>
@@ -34,14 +40,15 @@
       <view class="input-list">
         <view class="input-list-flex-left">
           <view class ="input-lable">品名</view>
-          <input class="input-box" maxlength="15" auto-focus placeholder="品名" bindinput="onInput"  data-type="new-item-name" />
+          <input class="input-box" maxlength="15"  placeholder="品名" bindinput="onInput"  data-type="new-item-name" value="{{new_item.name}}" />
           
         </view>
         <view class="input-list-flex-left">
           <view class ="input-lable">价格</view>
-          <input class="input-box" maxlength="10" auto-focus type="digit" placeholder="价格" bindinput="onInput" data-id="{{item.id}}" data-type="new-item-price"/>
+          <input class="input-box" maxlength="10"  type="digit" placeholder="价格" bindinput="onInput" data-id="{{item.id}}" data-type="new-item-price" value="{{new_item.price}}"/>
+          <button class="small-button" type="primary" bindtap='addItem'>添加</button>
         </view>
-        <button bindtap='addItem'>添加</button>
+        
       </view>
     </view>
     <view class="btn-area">

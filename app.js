@@ -1,6 +1,9 @@
 //app.js
+var utils = require('utils/utils.js');
 App({
   onLaunch: function() {
+    //var self = this;
+    utils.login();
   },
   globalData: {
     new_guid: function (){

@@ -1,3 +1,5 @@
+var storage = require('../../utils/utils.js');
+
 Page({
   data: {
     group_id: -1,
@@ -36,21 +38,43 @@ Page({
           item.checked = true;
           item.amount = order.purchases[i].amount;
         }else{
-          item.checked = false;
-          item.amount = 0;
+
         }
       }
     }else{
-      order = { name:"新用户", id: -1, purchases:[]};
+      order = { name:"新用户", id: -1, purchases:[], paid: false};
       order_id = -1;
+    }
+
+    if (typeof order.paid == "undefined") {
+      order.paid = false;
+    }
+
+    var can_edit_paid = false;
+    if (App.globalData.user_info.userId == group_order.user_info.userId){
+      can_edit_paid = true;
     }
 
     self.setData({
       group_id: group_id,
       order_id: order_id,
+      can_edit_paid: can_edit_paid,
       order:  order,
       items: items
     });
+  },
+
+  switchPaidChange: function (e) {
+    var paid = this.data.order.paid;
+    if (typeof paid == "undefined") paid = true;
+    else { paid = !paid}
+
+
+    this.setData({
+      "order.paid": paid
+    })
+
+    console.log(this.data.order);
   },
 
   onInput: function (e) {
@@ -118,11 +142,38 @@ Page({
         this.data.order_id = App.globalData.new_guid();
         this.data.order.id = this.data.order_id;
         group_order.orders.push(this.data.order);
+        this.data.order.user_info = App.globalData.user_info;
 
       }else{
         App.globalData.set_by_id(group_order.orders, this.data.order_id, this.data.order);
       }
+      
     }
+
+    var session_info = App.globalData.session_info;
+    var order = this.data.order;
+
+    var order_to_post = {
+      can_edit: order.can_edit,
+      id: order.id,
+      paid: order.paid,
+      purchases: order.purchases,
+      user_info: order.user_info
+    }
+
+    var post_order = {
+
+      sessionId: session_info.sessionId,
+      userId: session_info.userId,
+      updateObj: {
+
+        group_order_id: this.data.group_id,
+        order_id: this.data.order_id,
+        order: order_to_post
+      }
+    }
+
+    storage.update_order(post_order, function () { });
 
     wx.navigateBack({
       delta: 1

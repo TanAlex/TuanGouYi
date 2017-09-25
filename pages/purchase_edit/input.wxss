@@ -100,3 +100,74 @@ checkbox{
   display: flex;
   margin-right: 10px;
 }
+
+
+
+.item-row {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.item-row-span {
+  display: inline-flex;
+  margin-left:10px;
+  margin-right: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.item-row-top-line {
+  border-top: 1rpx solid #D8D8D8;
+  width: 100%
+}
+.item-row-bottom-line {
+  border-top: 1rpx solid #D8D8D8;
+}
+
+.item-avatar {
+  position: relative;
+  display: inline-flex;
+
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%; 
+  overflow: hidden; 
+  margin-left: 10px;
+  
+}
+.item-img {
+  position: absolute;
+  top: -3%;
+  left: -3%;
+  width: 106%;
+  height: 106%;
+}
+.item-name {
+  font-size: 34rpx;
+  color: #323232;
+  font-weight: normal;
+  
+  display: inline-flex;
+  margin: 5px;
+  margin-left:20px;
+}
+
+.section-header {
+  font-size: 34rpx;
+  color: #030303;
+  margin: 5px;
+  margin-left: 2px;
+
+}
+.section-header:before {
+  content: " ";
+  
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  border-left: 3px solid #D80000;
+  color: #D80000;
+  margin-right: 10px;
+}

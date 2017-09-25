@@ -2,15 +2,22 @@
   <view class="section g-wrap">
 
       
-    <view class="flex-left">
-      <view class="section-title">当前团购</view>
-      <button class="small-button" bindtap='newGroupOrder' type="primary">发起新购</button>
+    <view class="item-row">
+      <span class="item-row-span" >
+        <view class="section-header">当前团购</view>
+      </span>
+
+      <span class="item-row-span" >
+        <view class="section-text">只显示我参与的</view>
+        <switch checked="{{only_show_mine}}" bindchange="switchChange"/>
+      </span>
     </view>
+
     <view class="list">
       <view class="list-item" wx:for="{{ group_orders }}"  wx:key="id">
         <navigator url="../hero_detail/hero_detail?id={{ item.id }}"></navigator>
         <view class="list-avatar">
-          <image class="list-img" src="../../img/role/mage.png"></image>
+          <image class="list-img" src="{{item.user_info_display.avatarUrl}}"></image>
         </view>
         <view class="list-text">
           <view class="list-text-line">
@@ -32,4 +39,9 @@
     <view class="about-des">建议&合作</view>
     <view class="about-des">simartar.com@gmail.com</view>
   </view>
+
+  <view class="footer">
+    <button class="small-button" bindtap='newGroupOrder' type="primary">发起新购</button>
+  </view>  
 </view>
+

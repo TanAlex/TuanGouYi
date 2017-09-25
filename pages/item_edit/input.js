@@ -56,7 +56,7 @@ Page({
     delete group_order['_id'];
     self.setData({
       group_order: group_order,
-      new_item: {}
+      new_item: {name:"", price: ""}
     });
     console.log(this.data.group_order);
   },
@@ -71,7 +71,9 @@ Page({
     var group_order = this.data.group_order;
     if (ctrl_type == "order"){
       group_order.title = ctrl_value;
-    } else if (ctrl_type == "item-name"){
+    } else if (ctrl_type == "description") {
+      group_order.description = ctrl_value;
+    }else if (ctrl_type == "item-name"){
       var item = group_order.items_hash[ctrl_id];
       item.name = ctrl_value;
     } else if (ctrl_type == "item-price") {
@@ -103,11 +105,12 @@ Page({
   addItem: function (e) {
     var item = this.data.new_item;
     if (typeof (item.name) != "undefined" && typeof (item.price) != "undefined" &&
-    item.name != "" && parseInt(item.price) != NaN && parseInt(item.price) != 0) {
+      item.name != "" && parseInt(item.price) != NaN && item.price != "") {
       var group_order = this.data.group_order;
       item.id = this.data.new_guid();
       group_order.items.push(item);
-      this.setData({ group_order: group_order });
+
+      this.setData({ group_order: group_order, new_item: {name:"", price: ""} });
     } else {
       wx.showModal({
         title: '请检查',
@@ -126,6 +129,8 @@ Page({
 
   saveAndBack: function (e) {
     var App = getApp();
+    var item = this.data.new_item;
+
     if (this.data.group_order.title == ""){
       wx.showModal({
         title: '请检查',
@@ -139,7 +144,22 @@ Page({
           }
         }
       })
+    } else if (typeof (item.name) != "undefined"  && item.name != "" ){
+      wx.showModal({
+        title: '请检查',
+        content: '添加新货品有您的输入值，是否忘记按添加键',
+        showCancel: false,
+        success: function (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+      return;
     }else{
+      var isNewGroupOrder = false;
       if (this.data.group_order.id != -1) {
         //update existing group_orders
         /*
@@ -150,15 +170,43 @@ Page({
           }
         }
         */
+        var user_info =  this.data.group_order.user_info;
+        if (typeof user_info == "undefined"){
+          this.data.group_order.user_info = App.globalData.user_info;
+        }else{
+          //update nickname and avatar
+          user_info.avatarUrl = App.globalData.user_info.avatarUrl;
+          user_info.nickName = App.globalData.user_info.nickName;
+        }
       }else{
         //insert to database to get a new id
         //then push to the global data
+        isNewGroupOrder = true;
         this.data.group_order.id = this.data.new_guid();
-        
+        this.data.group_order.user_info = App.globalData.user_info;
         App.globalData.group_orders.push(this.data.group_order);
       }
       delete this.data.group_order['_id'];
-      storage.update(this.data.group_order, function () { });
+      //storage.update(this.data.group_order, function () { });
+      var session_info = App.globalData.session_info;
+      console.log(user_info);
+      var post_order = {
+        
+        sessionId: session_info.sessionId,
+        userId: session_info.userId,
+        updateObj:{
+          group_order_id: this.data.group_order.id,
+          user_info: this.data.group_order.user_info,
+          title: this.data.group_order.title,
+          description: this.data.group_order.description,
+          items: this.data.group_order.items
+        }
+      }
+      if (isNewGroupOrder) {
+        post_order.updateObj.orders = [];
+        post_order.updateObj.create_at = new Date();
+      } 
+      storage.update_item(post_order, function () { });
 
       if (this.data.group_order.is_new){
         wx.switchTab({

@@ -4,7 +4,8 @@
     "pages/hero_detail/hero_detail",
     "pages/item_edit/input",
     "pages/order_edit/order_edit",
-    "pages/purchase_edit/input"
+    "pages/purchase_edit/input",
+    "pages/group_list/term_detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -14,9 +15,9 @@
     "backgroundTextStyle": "light"
   },
   "tabBar": {
-    "color": "#A4A4A4",
-    "selectedColor": "#D4A93D",
-    "backgroundColor": "#fff",
+    "color": "#B0B0A0",
+    "selectedColor": "#D02020",
+    "backgroundColor": "#ffffff",
     "position": "top",
     "list": [
       {
@@ -25,8 +26,8 @@
       },
 
       {
-        "pagePath": "pages/index/index_me_only",
-        "text": "我参与的"
+        "pagePath": "pages/group_list/term_detail",
+        "text": "推荐购物群"
       }
 
     ]
