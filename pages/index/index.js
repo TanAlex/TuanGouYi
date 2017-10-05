@@ -6,7 +6,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    only_show_mine : false,
+    only_show_mine : true,
     group_orders:[],
 
 
@@ -79,21 +79,28 @@ Page({
     });
     */
     var options = {};
-    storage.check_and_login();
-    var App = getApp();
-    if (this.data.only_show_mine) {
-      options = {
-        sessionId: App.globalData.session_info.sessionId,
-        userId: App.globalData.session_info.userId
+    wx.showToast({
+      title: '努力加载中',
+      icon: 'loading',
+      duration: 9900
+    })
+    storage.check_and_login(function(){
+      var App = getApp();
+      if (self.data.only_show_mine) {
+        options = {
+          sessionId: App.globalData.session_info.sessionId,
+          userId: App.globalData.session_info.userId
+        }
+
       }
 
-    }
-
-    storage.list_all(options, function(res){ 
-      var App = getApp();
-      self.setData({
-        group_orders: App.globalData.group_orders
-      });
+      storage.list_all(options, function(res){ 
+        var App = getApp();
+        self.setData({
+          group_orders: App.globalData.group_orders
+        });
+      })
+      wx.hideToast();
     })
   }
 })

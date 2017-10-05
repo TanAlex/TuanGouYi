@@ -3,7 +3,7 @@ var utils = require('utils/utils.js');
 App({
   onLaunch: function() {
     //var self = this;
-    utils.login();
+    //utils.login();
   },
   globalData: {
     new_guid: function (){
@@ -26,17 +26,37 @@ App({
     },
     set_by_id: function (array, id, new_value) {
       var item;
-      var is_ok = false;
+      var found = false;
       for (let i = 0; i < array.length; i++) {
         if (array[i].id == id) {
           item = array[i];
           array[i] = new_value;
-          is_ok = true;
+          found = true;
           break;
         }
       }
-      return is_ok;
+      return found;
     },
+    
+    set_or_append_by_id: function (array, id, new_value) {
+      if (!this.set_by_id(array, id, new_value)){
+        array.push(new_value);
+      }
+    },
+
+    delete_by_id: function (array, id) {
+      var item;
+      var found = false;
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].id == id) {
+          item = array[i];
+          array.splice(i,1);
+          found = true;
+          break;
+        }
+      }
+      return found;
+    },    
 
     group_orders: []
   }

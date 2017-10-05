@@ -127,6 +127,39 @@ Page({
     }
   },
 
+  deleteAndBack: function (e) {
+    var self= this;
+    var App = getApp();
+    wx.showModal({
+      title: '请确认',
+      content: '真的要删除吗，不能恢复的哦',
+      showCancel: true,
+      success: function (res) {
+        if (res.confirm) {
+          console.log('用户点击确定');
+          //no need to delete, delete in backend and refresh should make it
+          //App.globalData.delete_by_id(App.globalData.group_orders, self.data.group_order.id);
+          var session_info = App.globalData.session_info;
+          //console.log(user_info);
+          var post_order = {
+            sessionId: session_info.sessionId,
+            userId: session_info.userId,
+            group_order_id: self.data.group_order.id
+          }
+          
+          storage.delete_group_order(post_order, function () {
+            wx.switchTab({
+              url: '../index/index'
+            })
+          });
+
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })    
+  },
+
   saveAndBack: function (e) {
     var App = getApp();
     var item = this.data.new_item;
@@ -206,21 +239,22 @@ Page({
         post_order.updateObj.orders = [];
         post_order.updateObj.create_at = new Date();
       } 
-      storage.update_item(post_order, function () { });
 
-      if (this.data.group_order.is_new){
-        wx.switchTab({
-          url: '../index/index'
-        })
+      var self = this;
+      storage.update_item(post_order, function () { 
 
-      }else{
-        
-        wx.navigateBack({
-          delta: 1
-        });
-      }
+        if (self.data.group_order.is_new){
+          wx.switchTab({
+            url: '../index/index'
+          })
 
-
+        }else{
+          
+          wx.navigateBack({
+            delta: 1
+          });
+        }
+      });
     }
   },
 

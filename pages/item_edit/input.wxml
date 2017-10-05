@@ -53,7 +53,11 @@
     </view>
     <view class="btn-area">
       <button type="primary" bindtap='saveAndBack'>Save and Back</button>
+<!--      
+      <button wx:if ="{{! group_order.is_new }}" bindtap="deleteAndBack" type='warn'>Delete and Back</button>
+-->
       <button bindtap='cancelAndBack'>Cacel and Back</button>
+
     </view>
   </view>
 

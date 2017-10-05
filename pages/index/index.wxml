@@ -6,11 +6,12 @@
       <span class="item-row-span" >
         <view class="section-header">当前团购</view>
       </span>
-
+<!--
       <span class="item-row-span" >
         <view class="section-text">只显示我参与的</view>
         <switch checked="{{only_show_mine}}" bindchange="switchChange"/>
       </span>
+-->
     </view>
 
     <view class="list">

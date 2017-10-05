@@ -4,7 +4,7 @@ Page({
   data: {
     group_id: -1,
     order_id: -1,
-    order: {},
+    order: { user_info: { nickName: "", avatarUrl: "../../img/icon/user-icon.png"}},
     items: [],
     items_hash: {},
     focus: false,
@@ -42,7 +42,7 @@ Page({
         }
       }
     }else{
-      order = { name:"新用户", id: -1, purchases:[], paid: false};
+      order = { id: -1, purchases: [], paid: false, user_info: App.globalData.user_info};
       order_id = -1;
     }
 

@@ -181,12 +181,25 @@
   text-align: center;
   box-shadow: 0px 1px 4px #D8DDE5;
 }
-.item-row {
+.section-row {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%
+}
+.section-row-span {
   display: inline-flex;
   align-items: center;
-  margin-top: 10px;
-  padding-top: 10px;
+  justify-content: center;
 }
+.item-row {
+  display: inline-flex;
+  margin: 10px 0 0 0;
+  width: 100%;
+  padding: 12px;
+
+}
+
 .item-row-top-line {
   border-top: 1rpx solid #D8D8D8;
   width: 100%
@@ -228,8 +241,8 @@
   margin-left: 30px;
 }
 .item-value {
-  font-size: 26rpx;
-  color: #8C9298;
+  font-size: 28rpx;
+  color: #6C7268;
   margin: 5px;
   margin-left: 30px;
 
@@ -238,7 +251,7 @@
   font-size: 26rpx;
   color: #8C9298;
   margin: 5px;
-  margin-left: 40px;
+  margin-left: 46px;
 
 }
 
@@ -255,6 +268,9 @@
   text-decoration: line-through;
   color: #000000;
   background-color: #FFFFFF;
+  margin-top: 3rpx;
+  margin-left: 5rpx;
+  padding: 5px;
 }
 .item-price-cross:after {
   content: "paid";
@@ -262,8 +278,8 @@
   font-size:10px;
   padding: 2px 6px;
   left: 5rpx;
-  top: -10px;
-  margin-left:-2px;
+  top: -6px;
+  margin-left:2px;
   border: 1rpx solid #08D808;
   background-color:  #08D808;
   color: #F8F8F8;
@@ -369,13 +385,16 @@ button {
 }
 
 .footer {
+  
   position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 1px;
-  background-color: #efefef;
+  padding: 1px 10px;
   text-align: center;
+  background-color:rgba(239, 239, 239, 0.5);
+
+
 }
 
 .section-header {
@@ -410,4 +429,45 @@ button {
   color: #030303;
   margin: 5px;
   margin-left: 18px;
+}
+
+
+.container-2 {
+  position: absolute;
+  padding-bottom: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: #eee;
+}
+.card {
+  padding: 32px 16px;
+  margin: 180rpx auto 0 auto;
+  width: 92%;
+  min-height: 160px;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-radius: 6px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, .10);
+}
+.card text {
+  display: block;
+}
+.name {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.spell {
+  font-size: 32rpx;
+}
+.des {
+  margin-top: 12px;
+  font-size: 32rpx;
+  color: #949494;
+}
+
+.small-button{
+  font-size: 12px;
+  padding: 1px 8px; 
+  margin-right: 30rpx;
+  box-shadow: 0px 1px 4px #D8DDE5;
 }

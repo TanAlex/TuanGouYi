@@ -1,0 +1,62 @@
+.container {
+  position: absolute;
+  padding-bottom: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: #eee;
+}
+.card {
+  padding: 32px 16px;
+  margin: 80rpx auto 80rpx auto;
+  width: 92%;
+  min-height: 160px;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-radius: 6px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, .10);
+}
+.card text {
+  display: block;
+}
+.name {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.spell {
+  font-size: 32rpx;
+}
+.des {
+  margin-top: 12px;
+  font-size: 32rpx;
+  color: #949494;
+
+}
+.item-row {
+  display: inline-flex;
+  margin: 10px 0 0 0;
+  width: 100%;
+  align-content: center;
+}
+.item-des {
+  margin: 12px;
+  font-size: 32rpx;
+  color: #949494;
+  display: inline-flex;
+}
+.item-avatar {
+  position: relative;
+  display: inline-flex;
+
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%; 
+  overflow: hidden; 
+  
+}
+.item-img {
+  position: absolute;
+  top: -3%;
+  left: -3%;
+  width: 106%;
+  height: 106%;
+}

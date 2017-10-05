@@ -1,92 +1,126 @@
-<view class="header">
-  <view class="cover">
-    <image src="{{ group_order.cover_img }}" mode="widthFix"></image>
-  </view>
-  <view class="filter"></view>
-  <view class="hero-title">
-    
-    <view class="name">{{ group_order.title }}</view>
-  </view>
-</view>
-
-<view class="container">
-  <view class="hero-nav">
-    <view class="nav-item {{ nav_index == 0 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="0">团购货物</view>
-    <view class="nav-item {{ nav_index == 1 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="1">参与者</view>
-  </view>
-
-  <view class="tab-content">
-    <view class="tab-content-item" hidden="{{ nav_index != 0 }}">
-      <view class="section ">
-        <view class="section-header">简单介绍</view>
-        <view class="section-text">{{ group_order.description }}</view>
-
-        <view class="section-header">可选货品</view>
-
-        <block wx:if="{{group_order.can_edit}}">
-
-          <view class="button-right" >EDIT
-            <navigator url="../item_edit/input?id={{ group_order.id }}"></navigator>
-          </view>
-        </block>
-        <view class="section-text-highlight">{{"全单总价: $"+ group_order.total}}</view>
-        <view class="skill-content">
-          <view class="skill-content-item">
-            <view class="skill-content-header"> 
-                       
-              <view wx:for="{{ group_order.items }}" wx:key="id">
-                <view class="item-name">{{ (index+1) + ": "+ item.name }}</view>
-                <!-- <view class="item-tag">推荐</view> -->
-                <view class="item-value">{{"价格：$"+ item.price + "  总购数量: " + item.count +"  总价: $"+ item.total}}</view>
-              </view>
-
-            </view>
-          </view>
-        </view> 
-      </view>
+<block wx:if="{{not_found}}">
+  <view class="container-2" style="background: {{ bg }}">
+    <view class="card">
+      <text class="name">这个团购单已取消或过期</text>
+      <text wx:if="{{ spell }}" class="spell">[{{ spell }}]</text>
+      <text class="des">请按右上角 Home 键看看你其他的团购单吧</text>
     </view>
-    <view class="tab-content-item" hidden="{{ nav_index != 1 }}">
-     
-      <view class="section ">
+  </view>
+</block>
+<block wx:else>
+  <view class="header">
+    <view class="cover">
+      <image src="{{ group_order.cover_img }}" mode="widthFix"></image>
+    </view>
+    <view class="filter"></view>
+    <view class="hero-title">
+      
+      <view class="name">{{ group_order.title }}</view>
+    </view>
+  </view>
+
+  <view class="container">
+    <view class="hero-nav">
+      <view class="nav-item {{ nav_index == 0 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="0">团购货物</view>
+      <view class="nav-item {{ nav_index == 1 ? 'nav-current' : '' }}" catchtap="toggleNav" data-tabindex="1">参与者</view>
+    </view>
+
+    <view class="tab-content">
+      <view class="tab-content-item" hidden="{{ nav_index != 0 }}">
+        <view class="section ">
+          
+          <view class="section-row">
+            <span class="section-row-span" >  
+              <view class="section-header">简单介绍</view>
+            </span>
+            <block wx:if="{{group_order.can_edit}}">
+              <span class="section-row-span" >
+                <button class="small-button" bindtap='removeOrder'  type="warn">删除此单</button>
+              </span>
+            </block>
+          </view>
+          <view class="section-text">{{ group_order.description }}</view>
+
+          <view class="section-header">可选货品</view>
+
+          <block wx:if="{{group_order.can_edit}}">
+
+            <view class="button-right" >EDIT
+              <navigator url="../item_edit/input?id={{ group_order.id }}"></navigator>
+            </view>
+
+            <view class="section-text-highlight">{{"全单总价: $"+ group_order.total}}</view>
+          </block>
+          <view class="skill-content">
+            <view class="skill-content-item">
+              <view class="skill-content-header"> 
+                        
+                <view wx:for="{{ group_order.items }}" wx:key="id">
+                  <view class="item-name">{{ (index+1) + ": "+ item.name }}</view>
+                  <!-- <view class="item-tag">推荐</view> -->
+                  <block wx:if="{{group_order.can_edit}}">
+                    <view class="item-value">{{"价格：$"+ item.price + "  总购数量: " + item.count +"  总价: $"+ item.total}}</view>
+                  </block>
+                  <block wx:else>
+                    <view class="item-value">{{"价格：$"+ item.price }}</view>
+                  </block>
+                </view>
+
+              </view>
+            </view>
+          </view> 
+        </view>
+      </view>
+      <view class="tab-content-item" hidden="{{ nav_index != 1 }}">
+      
+        <view class="section ">
+          <view class="section-row">
+            <span class="section-row-span" >  
+              <view class="section-header">{{"全单总价: $"+ group_order.total}}</view>
+            </span>
+            <block wx:if="{{group_order.can_edit}}">
+              <span class="section-row-span" >
+                <view class="section-text">结单锁定</view>
+                <switch checked="{{group_order.locked}}" bindchange="switchLockChange"/>
+              </span>
+            </block>
+          </view>
+          <view class="section-text-highlight">{{ "待付 $"+group_order.to_pay_total }}</view>
+          
+
+          <view class="section-header">便捷工具</view>
+          <view class="section-text">内容拷贝到剪切板用来去接龙</view>
+          <view class="button-right" bindtap='copyClipboard' >拷贝</view>
+
+          <view class="section-header">参与者</view>
         
-        <view class="section-header">{{"全单总价: $"+ group_order.total}}</view>
-        <view class="section-text-highlight">{{ "待付 $"+group_order.to_pay_total }}</view>
-        <view class="section-header">便捷工具</view>
-
-        <view class="section-text">内容拷贝到剪切板用来去接龙</view>
-        <view class="button-right" bindtap='copyClipboard' >拷贝</view>
-
-        <view class="section-header">参与者</view>
-        <view class="skill-content">
-          <view class="skill-content-item">
-            <view class="skill-content-header">            
-              <view wx:for="{{ group_order.orders }}"  wx:key="id">
-                <view class="item-row item-row-top-line">
-                  <view class="item-avatar">
-                    <image class="item-img" src="{{item.user_info_display.avatarUrl}}"></image>
-                  </view>
-                  <view class="item-name">{{ item.user_info_display.nickName }}</view>
-                  <view class="{{item.price_display_class}}">{{"总价：$"+ item.total }}</view>
-                </view>
-        <view class="button-right" wx:if="{{item.can_edit}}">EDIT
-          <navigator url="../purchase_edit/input?id={{ group_order.id }}&order_id={{item.id}}"></navigator>
-        </view>                
-                <view wx:for="{{ item.purchases }}" wx:for-item="purchase" wx:for-index="i" wx:key="id" >
-                  <view class="item-value">{{ (i+1) + ": "+ purchase.name }} </view>
-                  <view class="item-value-2">{{ "单价：$"+purchase.price + "  数量:"+ purchase.amount + "  总价: $" + purchase.sub_total }}</view>
-                </view>
-                <!-- <view class="item-tag">推荐</view> -->
-
+          
+          <view wx:for="{{ group_order.orders }}"  wx:key="id">
+            <view class="item-row item-row-top-line">
+              <view class="item-avatar">
+                <image class="item-img" src="{{item.user_info_display.avatarUrl}}"></image>
               </view>
-
+              <view class="item-name">{{ item.user_info_display.nickName }}</view>
+              <view class="{{item.price_display_class}}">{{"总价：$"+ item.total }}</view>
             </view>
+            <view class="button-right" wx:if="{{item.can_edit}}">EDIT
+              <navigator url="../purchase_edit/input?id={{ group_order.id }}&order_id={{item.id}}"></navigator>
+            </view>                
+            <view wx:for="{{ item.purchases }}" wx:for-item="purchase" wx:for-index="i" wx:key="id" >
+              <view class="item-value">{{ (i+1) + ": "+ purchase.name }} </view>
+              <view class="item-value-2">{{ "单价：$"+purchase.price + "  数量:"+ purchase.amount + "  总价: $" + purchase.sub_total }}</view>             
+            </view>
+            <!-- <view class="item-tag">推荐</view> -->
+
           </view>
-        </view> 
+        </view>
+
+        
       </view>
     </view>
+    
+    <view class="footer" wx:if="{{group_order.notOrderedYet}}">
+    <button class="" bindtap='newOrder' type="primary">我也参购</button>
+    </view>
   </view>
-  
-  <view class="footer" wx:if="{{group_order.notOrderedYet}}">
-   <button class="small-button" bindtap='newOrder' type="primary">我也参购</button>
-  </view>
-</view>
+</block>

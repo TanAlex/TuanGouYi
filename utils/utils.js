@@ -1,19 +1,27 @@
 var config = require ("config.js");
 module.exports = {
-  check_and_login: function(){
+  check_and_login: function(callback){
     var self = this;
+    var App = getApp();
     wx.checkSession({
       success: function (e) {   //登录态未过期
         console.log("没过期");
+        if (typeof App.globalData.session_info == "undefined"
+          || typeof App.globalData.session_info.userId == "undefined" ){
+          self.login(callback);
+        }else if (typeof callback == "function"){
+          
+          callback();
+        }
       },
       fail: function () { 
-        self.login();
+        self.login(callback);
 
       }
     })
   },
   
-  login: function(){
+  login: function (callback){
     wx.login({
       success: function (res) {
         if (res.code) {
@@ -58,6 +66,8 @@ module.exports = {
                     res.userInfo.userId = session_info.userId;
                     App.globalData.user_info = res.userInfo;
                     console.log(App.globalData);
+                    if (typeof callback =="function")
+                      callback();
                   }
                 })
               }
@@ -74,36 +84,37 @@ module.exports = {
     var service_url = config.url_list_all + "?id=" + group_order_id;
 
 
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading',
-      duration: 8000
-    })
-    this.check_and_login();
-    wx.request({
-      //url: 'https://thebusy.net:3000/ajax/order/list',
-      url: service_url,
-      method: 'GET',
-      data: {
 
-      },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: function (res) {
-        var App = getApp();
-        
-        var res_group_orders = res.data;
-        if (res_group_orders == "undefined") return false;
-        var res_group_order = res_group_orders[0];
-        if (res_group_order == "undefined") return false;
-        if (res_group_order.id == "undefined") return false;
-        App.globalData.set_by_id(App.globalData.group_orders, res_group_order.id, res_group_order );
-        wx.hideToast();
-        success_func();
-      }
-    })
+    this.check_and_login( function(){
+      wx.request({
+        //url: 'https://thebusy.net:3000/ajax/order/list',
+        url: service_url,
+        method: 'GET',
+        data: {
 
+        },
+        header: {
+          'Content-Type': 'application/json'
+        },
+        success: function (res) {
+          var App = getApp();
+          
+          var res_group_orders = res.data;
+          console.log("in check_and_login success callback");
+          try {
+            if (res_group_orders.length > 0){
+              var res_group_order = res_group_orders[0];
+              App.globalData.set_or_append_by_id(App.globalData.group_orders, res_group_order.id, res_group_order );
+            }
+          }catch(e){
+            console.log(e);
+
+          }
+          //wx.hideToast();
+          success_func();
+        }
+      })
+    })
   },
 
   list_all: function (options,success_func ){
@@ -130,13 +141,20 @@ module.exports = {
       },
       success: function(res){ 
         var App = getApp();
-        App.globalData.group_orders = res.data;
+        if (typeof res != "undefined" && res.data !== null && typeof res.data === 'object'){
+          App.globalData.group_orders = res.data;
+        }else{
+          App.globalData.group_orders = [];
+        }
+
 
         var group_orders = App.globalData.group_orders;
+
         console.log("list_all after network call");
         console.log(group_orders);
         for (let i = 0; i < group_orders.length; i++) {
           var g = group_orders[i];
+
           if (typeof g.user_info == "undefined"){
             g.user_info_display = {
               avatarUrl: "../../img/icon/user-icon.png",
@@ -145,12 +163,24 @@ module.exports = {
           }else{
             g.user_info_display = g.user_info;
           }
-          var desc = g.items.map(function (elem) {
-            return elem.name;
-          }).join(",");
-          var new_desc = desc.substr(0, 17);
-          if (desc != new_desc) { new_desc += ".." }
-          group_orders[i].desc = new_desc;
+          if (typeof g.locked == "undefined") g.locked = false;
+          if (g.locked) {
+            g.desc = " (已结单锁定,只有创建者可以修改)";
+
+          }else{
+            var new_desc;
+            if (typeof g.description != "undefined"){
+              new_desc = g.description.substr(0, 17);
+              if (g.description != new_desc) { new_desc += "..." }              
+            }else{
+              var desc = g.items.map(function (elem) {
+                return elem.name;
+              }).join(",");
+              new_desc = desc.substr(0, 17);
+              if (desc != new_desc) { new_desc += "..." }
+            }
+            g.desc = new_desc;
+          }
 
         }
         wx.hideToast();
@@ -212,6 +242,22 @@ module.exports = {
         console.log(res);
       }
     });
-  }
+  },
 
+  delete_group_order: function (order, success_func) {
+    wx.request({
+      //url: 'https://thebusy.net:3000/ajax/order/updatePO',
+      url: config.url_delete_order,
+      data: order,
+      method: 'POST',
+      header: {
+        'content-type': 'application/json'
+      },
+      success: success_func,
+      fail: function (res) {
+        console.log("delete failed");
+        console.log(res);
+      }
+    });
+  }
 }

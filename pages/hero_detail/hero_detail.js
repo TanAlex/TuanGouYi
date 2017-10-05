@@ -9,9 +9,11 @@ Page({
   data: {
     nav_index :0,
     group_id: -1,
+    not_found: false,
     group_order: {
       cover_img: "http://",
       id: null,
+      locked: false,
       items_hash: {}
 
     }
@@ -29,7 +31,7 @@ Page({
     }
     for (let j = 0; j < this.data.group_order.orders.length; j++){
       var order = this.data.group_order.orders[j];
-      data += "\n参购者: "+ order.user_info.nickName;
+      data += "\n\n参购者: "+ order.user_info.nickName;
       data += "  总价: "+ order.total;
       var purchases = order.purchases;
       for (let i = 0; i < purchases.length; i++) {
@@ -80,9 +82,15 @@ Page({
   onShow: function(options){
     console.log("hit onShow");
     var self=this;
-    
+
+    wx.showToast({
+      title: '努力加载中',
+      icon: 'loading',
+      duration: 9900
+    })
     storage.list_by_group_order_id(self.data.group_id,function (res) {
       self.refresh(self.data.group_id);
+      wx.hideToast();
     })
   },
 
@@ -90,8 +98,19 @@ Page({
 
     var App = getApp();
     var group_orders = App.globalData.group_orders;
+    if (typeof group_orders == "undefined" || group_orders.length == 0) {
+      //this gorup_order must be deleted or something
+      this.setData({ not_found: true });
+      return;
+    }
 
     var group_order = App.globalData.get_by_id(group_orders, group_id);
+
+    if (typeof group_order == "undefined"){
+      //this gorup_order must be deleted or something
+      this.setData( {not_found: true});
+      return;
+    }
 
     group_order.can_edit = this.ifOrderEditable(group_order);
 
@@ -118,7 +137,7 @@ Page({
       var sub_total = 0;
       // 团购主 可以修改任何一个order, 参与者只能修改自己的 order
       if (group_order.can_edit) order.can_edit = true;
-      else order.can_edit = this.ifOrderEditable(order);
+      else order.can_edit = (this.ifOrderEditable(order) && !group_order.locked );
 
       if (typeof order.user_info == "undefined") {
         order.user_info_display = {
@@ -171,6 +190,8 @@ Page({
 
 
     group_order.to_pay_total = to_pay_total;
+
+    if (group_order.locked) notOrderedYet = false;
     group_order.notOrderedYet = notOrderedYet;
 
 
@@ -182,9 +203,65 @@ Page({
       group_order.orders.unshift(our_order);
     }
 
+    if (typeof group_order.locked == "undefined") group_order.locked = false;
+
     this.setData({
       group_order: group_order
     });    
+  },
+
+  removeOrder: function (e) {
+    var self = this;
+    var App = getApp();
+    wx.showModal({
+      title: '请确认',
+      content: '真的要删除吗，不能恢复的哦',
+      showCancel: true,
+      success: function (res) {
+        if (res.confirm) {
+          console.log('用户点击确定');
+          //no need to delete, delete in backend and refresh should make it
+          //App.globalData.delete_by_id(App.globalData.group_orders, self.data.group_order.id);
+          var session_info = App.globalData.session_info;
+          //console.log(user_info);
+          var post_order = {
+            sessionId: session_info.sessionId,
+            userId: session_info.userId,
+            group_order_id: self.data.group_order.id
+          }
+
+          storage.delete_group_order(post_order, function () {
+            wx.switchTab({
+              url: '../index/index'
+            })
+          });
+
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })    
+  },
+
+  switchLockChange: function(e){
+    var App = getApp();
+    var group_order = this.data.group_order;
+    if (typeof group_order.locked == "undefined") group_order.locked = false;
+    group_order.locked = !group_order.locked;
+    var session_info = App.globalData.session_info;
+
+    var post_order = {
+
+      sessionId: session_info.sessionId,
+      userId: session_info.userId,
+      updateObj: {
+        group_order_id: this.data.group_order.id,
+        locked: group_order.locked
+      }
+    }
+    var self = this;
+    storage.update_item(post_order, function () { });
+
   },
 
 
